@@ -7,26 +7,74 @@
     <!-- links to css -->
     <link rel="stylesheet" type="text/css" href="assets/css/reset.css">
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">  
+    <!-- Firebase Reference -->
+    <script src="https://www.gstatic.com/firebasejs/3.7.1/firebase.js"></script> 
     <!-- links to javascript and jquery -->
     <script src="https://code.jquery.com/jquery-3.1.1.js"></script>  
     <script type="text/javascript" src="assets/javascript/app.js"></script>
+    <!-- TimeCircles Reference -->
+    <script type="text/javascript" src="assets/javascript/TimeCircles.js"></script> 
+
+
   </head>
 
   <body>
 
     <header>
+      <h3>Paper Rock Scissors<h3>
+      
     </header>
 
     <main>
-      <section>
-        <div id="fullCircle">
-          <div id="battleFieldRight"></div>
-          <div id="battleFieldLeft"><div class="fill"></div></div>
+      <h2></h2>
+      <div id="form">
+        <form>
+          <label id="name-text">Name:</label>
+          <input id="name-input" type="text">
+          <button id="play-game" type="submit">Play</button>
+        </form>
+      </div>
+        <div class="players left">
+          <div class="info" id="p1Name"></div>
+          <div class="info" id="p1Health"><div id="p1score"></div></div>
+          <div class="picks" id="picksLeft">
+            <div class="select spot1" value="paper"><img src="assets/images/paper.png" class="choiceImg"></div>
+            <div class="select spot2" value="rock"><img src="assets/images/rock.png" class="choiceImg"></div>
+            <div class="select spot3" value="scissors"><img src="assets/images/scissors.png" class="choiceImg"></div>
+          </div>
         </div>
-      </section>
+
+        <div class="players right">
+        <div class="info" id="p2Name"></div>
+          <div class="info" id="p2Health"><div id="p2score"></div></div>
+          <div class="picks" id="picksRight">
+            <div class="select spot1" value="paper"><img src="assets/images/paper.png" class="choiceImg"></div>
+            <div class="select spot2" value="rock"><img src="assets/images/rock.png" class="choiceImg"></div>
+            <div class="select spot3" value="scissors"><img src="assets/images/scissors.png" class="choiceImg"></div>
+          </div>
+        </div>
+       
+        <!-- container for timer -->
+        <div class="container">
+          <div id="CountDownTimer" data-timer="5"></div>
+        </div>
+
+       <div id="fullCircle">
+          <div id="battleFieldLeft">
+            <div id="choiceLeft"></div>
+            <div id="fillLeft"></div>
+          </div>
+          <div id="battleFieldRight">
+            <div id="choiceRight"></div>
+            <div id="fillRight"></div>
+          </div>
+        </div>
+        
+      
     </main>
 
     <footer>
+     <button id="reset">reset</button>
     </footer>
   </body>
 </html>

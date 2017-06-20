@@ -1,102 +1,377 @@
+/* The animation code */
+@keyframes back {
+    0% {box-shadow: 3px 3px 20px #000;}
+    50% {box-shadow: 0px 0px 0px #000;}
+    51% {box-shadow: inset 0px 0px 0px #000;}
+    100% {box-shadow: inset 3px 3px 20px #000;}
+}
+
 body {
-	/*border: solid #000 1px;*/
+	border: solid #000 4px;
+	/*border-top: solid #000 4px;
+	border-bottom: solid #000 4px;*/
 	overflow: hidden;
 	width: 800px;
-	height: 600px;
-	margin: 20px auto;
+	height: 500px;
+	margin: 25px auto;
+	box-shadow: 1px 3px 20px #000;
 }
 
 header {
-	border: solid #000 1px;
+	border-bottom: solid #000 4px;
 	width: 800px;
-	height: 50px;
-	box-shadow: inset 1px 3px 20px #000;
+	height: 40px;
+	background-color: #ccc;
 }
 
 main {
-	/*border: solid #000 1px;*/
+	position: relative;
 	width: 800px;
+	height: 412px;
+	/*box-shadow: 0px 0px 50px 5px #000;*/
 }
 
 footer {
-	border: solid #000 1px;
+	border-top: solid #000 4px;
 	width: 800px;
-	height: 50px;
-	box-shadow: inset 1px 3px 20px #000;
+	height: 40px;
+	background-color: #ccc;
 }
 
-section {
-	position: relative;
-	/*border: solid #000 2px;*/
-	border-left: none;
-	border-right: none;
+h2 {
+	font-size: 40px;
+    text-align: center;
+    position: relative;
+    bottom: -350px;
+}
+
+h3 {
+	text-align: center;
+	font-size: 35px;
+}
+
+form {
+	
+}
+
+.players {
+	position: absolute;
+	top: 185px;
+	border-top: solid #000 4px;
+	border-bottom: solid #000 4px;
+	width: 257px;
+	height: 30px;
+	box-shadow: 1px 1px 5px #000;
+	background-color: #ccc
+}
+
+.info {
+	padding: 2px 0 2px 0;
+	font-size: 20px;
+	text-align: center;
 	width: 100%;
-	height: 204px;
-	/*margin: 100px 0;*/
-	background-color: #fff;
-	/*box-shadow:  0px 11px 19px #ccc;*/
 }
 
-#pipe {
+#p1Health {
+	position: absolute;
+	bottom: 1px;
+	width: 257px;
+	font-size: 8px;
+	color: #fff;
+	height: 3px;
+	padding: 0;
+	/*text-align: center;*/
+	border-top: solid #000 1px;
+	border-bottom: solid #000 1px;
+	background-color: #fff; 
+}
+
+#p1score{
+	width: 100%;
+	height: 100%;
+	background-color: #9133dd; 
+}
+
+#p2Health {
+	position: absolute;
+	bottom: 1px;
+	width: 257px;
+	font-size: 8px;
+	color: #fff;
+	height: 3px;
+	padding: 0;
+	/*text-align: center;*/
+	border-top: solid #000 1px;
+	border-bottom: solid #000 1px;
+	background-color: #ffa100; 
+}
+
+#p2score{
+	width: 0%;
+	height: 100%;
+	background-color: #fff; 
+}
+
+.left {
+	left: 0;
+}
+
+.right {
+	right: 0;
+}
+
+#form {
 	border: solid #000 1px;
+	padding: 5px;
+	display: none;
+	position: absolute;
+	bottom: 20px;
+	left: 36%;
+	text-align: center;
+	box-shadow: 1px 1px 5px #000;
+	z-index: 11;
+}
+
+.picks {
+	display: none;
+	position: absolute;
+	top: 50px;
+	/*border: solid #000 1px;*/
+	width: 100%;
+	height: 52px;
+}
+
+.select {
+	background-color: #ccc;
+	position: absolute;
+	border: solid #000 1px;
+	width: 50px;
+	height: 50px;
+	border-radius: 100%;
+	box-shadow: 1px 1px 5px #000;
+}
+
+.choiceImg {
+	position: absolute;
+	width: 75%;
+	top: 6px;
+	left: 6px;
+}
+
+.spot1 {
+	left: 35px;	
+}
+
+.spot2 {
+	left: 102px;
+}
+
+.spot3 {
+	right: 35px;
+}
+
+#play {
+	display: none;
+}
+
+#bg {
+	position: absolute;
+	left: 0;
+	width: 100%;
+	z-index: 1;
+}
+
+.back {
+	background-color: #00d2b2; 
+	height: 100px;
+	z-index: 3;
+}
+
+#leftBar {
+	position: absolute;
+    top: 110px;
+    left: 110px;
+    width: 200px;
+    height: 20px;
+    border: solid #000 1px;
+    /*background: linear-gradient(#999, #ccc, #fff, #ccc, #ccc, #999);*/
+    box-shadow: inset 3px 3px 10px #000;
+}
+
+.color {
+	margin: 8px 0;
+	background-color: #9133dd;
+	height: 5px;
+	width: 190px; 
+}
+
+
+.cover {
+	float: left;
+    height: 20px;
+    width: 190px;
+    background-color: #fff;
+    margin: 0;
+    backdrop-filter: grayscale(30%);
+    filter: opacity(.8);
 }
 
 #fullCircle {
 	overflow: hidden;
 	position: absolute;
-	/*border: solid #000 1px;*/
-	left: 298px;
-	top: 2px;
-	width: 200px;
-	height: 200px;
+	/*border: solid #000 3px;*/
+	left: 276px;
+    top: 75px;
+	width: 250px;
+	height: 250px;
 	background-color: #fff;
-	box-shadow: inset 1px 3px 20px #000;
 	border-radius: 100%;
 	z-index: 4;
+	box-shadow: inset 3px 3px 20px #000;
 }
 
 #battleFieldLeft{
 	overflow: hidden;
-	display: none ;
-	position: absolute;
-    left: 5px;
-    bottom: 22px;
-    border: solid #9133dd 10px;
-    width: 100px;
-    height: 200px;
-    border-right: none;
-    border-bottom: none;
-    border-top: none;
-    border-radius: 100px 0px 0px 100px;
-    
+    display: ;
+    position: absolute;
+    left: -2px;
+    bottom: -2px;
+    border-left: solid #9133dd 10px;
+    width: 100%;
+    height: 100%;
+    border-radius: 100%;
     transform: rotate(30deg);
-    z-index: 3;
+    box-shadow: 8px 0px 12px #000;
+    z-index: 5;
 }
 
 #battleFieldRight{
 	display: ;
 	position: absolute;
-    right: 5px;
-    bottom: -23px;
+    left: -8px;
+    bottom: 2px;
     border: solid #ffa100 10px;
-    width: 100px;
-    height: 200px;
+    width: 100%;
+    height: 100%;
     border-left: none;
     border-bottom: none;
     border-top: none;
-    border-radius: 0px 100px 100px 0px;
-    /*box-shadow: 8px 0px 12px #000;*/
+    border-radius: 100%;
+    box-shadow: 8px 0px 12px #000;
     transform: rotate(30deg);
-    z-index: 2;
+    z-index: 5;
 }
 
-.fill {
-	
+#fillLeft {
+	border-right: solid #000 2px;
 	background-color: #9133dd;
 	position: relative;
 	right: 100px;
-	width: 100%;
+	width: 30%;
 	height: 100%;
-	z-index: 1;
-	filter: opacity(.2);
+	z-index: 4;
+}
+
+#choiceLeft {
+	display: none;
+}
+
+#choiceRight {
+	display: none;
+}
+
+#fillRight {
+	background-color: #ffa100;
+	border-right: solid #000 2px;
+    position: relative;
+    right: -260px;
+    width: 52%;
+    height: 100%;
+    z-index: 4;
+    transform: rotate(180deg);
+}
+
+#p1Choice {
+	position: absolute;
+	width: 45%;
+    top: 57px;
+    left: 6px;
+}
+
+#p2Choice {
+	position: absolute;
+	width: 45%;
+    top: 75px;
+    right: 5px;
+}
+
+.container {
+	display: ;
+	position: absolute;
+	left: 276px;
+    top: 75px;
+    width: 250px;
+    height: 250px;
+	border-radius: 100%;
+	z-index: 10;
+	box-shadow: inset 3px 3px 20px #000;
+}
+
+#CountDownTimer {
+	position: relative;
+	width: 352px;
+	left: -51px;
+	top: -51px
+
+}
+
+/**
+ *	This element is created inside your target element
+ *	It is used so that your own element will not need to be altered
+ **/
+.time_circles {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+}
+
+/**
+ *	This is all the elements used to house all text used
+ * in time circles
+ **/
+.time_circles > div {
+    position: absolute;
+    text-align: center;
+}
+
+/**
+ *	Titles (Days, Hours, etc)
+ **/
+.time_circles > div > h4 {
+	display: none;
+    margin: 0px;
+    padding: 0px;
+    text-align: center;
+    text-transform: uppercase;
+    font-family: 'Century Gothic', Arial;
+	text-shadow: 1px 1px 1px #ccc;
+}
+
+/**
+ *	Time numbers, ie: 12
+ **/
+.time_circles > div > span {
+	display: none;
+    position: absolute;
+    left: 0px;
+    top: 10px;
+    width: 100%;
+    text-align: center;
+    font-family: 'Century Gothic', Arial;
+    font-size: 300%;
+    margin-top: 0.4em;
+    font-weight: bold;
+	color: #08c39b;
+	text-shadow: 1px 1px 2px #000;
 }
