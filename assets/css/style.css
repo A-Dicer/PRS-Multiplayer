@@ -101,6 +101,7 @@ h5 {
 
 #p2Health {
 	position: absolute;
+	overflow: hidden;
 	bottom: 1px;
 	width: 257px;
 	font-size: 8px;
