@@ -157,8 +157,6 @@ $(document).ready(function() {
             else if(p1Picked === "rock"){game.win = "p1";}
           }
         }
-        //in no one made a choice... what a bunch of jerks
-        else {console.log("NOBODY PICKED ANYTHING!")}
 
         //time to caculate the points
         //I'm sure this could be done better
@@ -227,14 +225,14 @@ $(document).ready(function() {
         game.database.ref("/game/p2/").update({ picked:  "null"});      
       }, 5500);
       
+      game.roundNumber++
       //check to see if someone lost    
       if (game.p1score < 1 || game.p2score < 1){ 
-        setTimeout(function(){
-          console.log("----------")
-          game.roundNumber++
-          game.end(), 7000});
+        setTimeout(game.end, 7000);
       } else {
-        setTimeout(game.start, 7000);
+        setTimeout( function(){
+          console.log("----------");
+          game.start()}, 7000);
       }     
     },
 
