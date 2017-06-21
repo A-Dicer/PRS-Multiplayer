@@ -13,20 +13,19 @@
     <script src="https://code.jquery.com/jquery-3.1.1.js"></script>  
     <script type="text/javascript" src="assets/javascript/app.js"></script>
     <!-- TimeCircles Reference -->
-    <script type="text/javascript" src="assets/javascript/TimeCircles.js"></script> 
-
-
+    <script type="text/javascript" src="assets/javascript/TimeCircles.js"></script>
   </head>
 
   <body>
-
     <header>
       <h3>Paper Rock Scissors<h3>
     </header>
-
     <main>
+      
+      <div id="spectate"></div>
       <h5></h5>
       <h2></h2>
+      
       <div id="form">
         <form>
           <label id="name-text">Name:</label>
@@ -34,6 +33,7 @@
           <button id="play-game" type="submit">Play</button>
         </form>
       </div>
+
         <div class="players left">
           <div class="info" id="p1Name"></div>
           <div class="info" id="p1Health"><div id="p1score"></div></div>
@@ -69,12 +69,10 @@
             <div id="fillRight"></div>
           </div>
         </div>
-        
-      
-    </main>
 
+    </main>
     <footer>
-     <button id="reset">reset</button>
+    ©Copyright Andrew Dicer - 2017
     </footer>
   </body>
 </html>

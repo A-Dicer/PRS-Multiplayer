@@ -24,18 +24,14 @@ $(document).ready(function() {
       var con = connectionsRef.push(true);
       //saves generated key as var
       game.key = con.key;
-      //console log that key
-      console.log(game.key)
       //if they disconnect remove the info
       con.onDisconnect().remove();
     }
   });
   //listens to see how many people are on site
   connectionsRef.on("value", function(snap) {
-    console.log("number of people on site: " + snap.numChildren());
+  $("#spectate").html("People on the site: " + snap.numChildren());
   });
-
-   
 
   var game = {
     name: false,
@@ -50,61 +46,64 @@ $(document).ready(function() {
     win: null,
     database: firebase.database(),
 
-    start: function(){    
+    start: function(){   
+      //sets items on page 
       $("h2").fadeOut("slow");
       $("#choiceLeft, #choiceRight").html("");
+      
+      //opens "doors"
       setTimeout( function(){
         $("#fillLeft").animate({"width" : "30%"}, 1000);
         $("#fillRight").animate({"right" : "-260px"}, 1000);
-      }, 500)
+      }, 500);
 
+      //get ready to start
       setTimeout(function(){$("h5").fadeIn("slow").html("Get Ready!")}, 2000)
-      console.log(game.player + " :start");
       setTimeout(game.round, 5000);
     },
 
     round: function(){
-
-        $("h5").fadeOut("slow");
-         console.log(game.player + " :round");
+      $("h5").fadeOut("slow");
+        //puts the picks on the screen for player one
         if(game.player === 1){
-          $("#picksLeft").fadeIn("slow");        
+          $("#picksLeft").fadeIn("slow");
+          //on click function to store the selection for player one        
           $(".select").on("click", function(){
-            var pick = $(this).attr("value")
+            var pick = $(this).attr("value");
             $("#choiceLeft").html("<img src='assets/images/" + pick + ".png' id='p1Choice'>" )
-            game.database.ref("/game/p1").update({
-              picked: pick,
-            })
-          $("#picksLeft").fadeOut("slow");
+            //update firebase
+            game.database.ref("/game/p1").update({picked: pick,});
+            $("#picksLeft").fadeOut("slow");
           });
         }
-
+        //puts the picks on the screen for player two
         if(game.player === 2){
           $("#picksRight").fadeIn("slow");
+          //on click function to store the selection for player two  
           $(".select").on("click", function(){
-            var pick = $(this).attr("value")
-            game.database.ref("/game/p2").update({
-              picked: pick,
-            })
+            var pick = $(this).attr("value");
+            //update firebase
+            game.database.ref("/game/p2").update({picked: pick,});
           $("#picksRight").fadeOut("slow");
           });
-
         }
 
         $(".select").hover(           
-          //what happens when you hover the card
+          //what happens when you hover
           function(){ 
             $(this).css({"border" : "solid #f00 2px", "box-shadow" : "1px 1px 10px #000"});
             $("h2").html($(this).attr("value"));
           },
-          //what happens when you stop hovering the card
+          //what happens when you stop hovering
           function(){
             $(this).css({"border" : "solid #000 1px", "box-shadow" : "1px 1px 5px #000"});
             $("h2").html("");
           });
 
         $("span").fadeIn("slow");
+        //starts the timer
         $("#CountDownTimer").TimeCircles().start();
+        //after 5 seconds go get results
         setTimeout(game.results, 5000);
       
     },
@@ -190,7 +189,7 @@ $(document).ready(function() {
         console.log("p2 score: " + game.p2score)
      
 
-      setTimeout(game.recap, 1000);
+      game.recap();
     },
 
     recap: function(){
@@ -217,13 +216,13 @@ $(document).ready(function() {
 
       setTimeout( function(){
       $("#choiceLeft, #choiceRight").css({"display" : "block"});
-      }, 1000);
+      }, 500);
 
       setTimeout( function(){
       $("#fillLeft").animate({"width" : "30%"}, 1000);
       $("#fillRight").animate({"right" : "-260px"}, 1000);
       $("h2").fadeIn("slow").text(response).css('textTransform', 'capitalize');  
-      }, 3500)
+      }, 1500)
 
       setTimeout( function(){
 
@@ -250,8 +249,6 @@ $(document).ready(function() {
     end: function(){
       console.log("end");
       var result;
-
-      
       database.ref("/game/").once("value", function(snap) {     
         if (game.p1score === game.p2score) {result = "You Both Lose!"}
         else if (game.p1score > game.p2score ){result = snap.val().p1.name + " Wins!"}
@@ -291,7 +288,7 @@ $(document).ready(function() {
         picked: "null",
         score: "10",
       })
-      
+
     location.reload()
     },
   }
@@ -302,8 +299,8 @@ $(document).ready(function() {
     var players = snap.val().playerCount
     console.log("number of players " + players);
 
-    $("#p1Name").html(snap.val().p1.name);
-    $("#p2Name").html(snap.val().p2.name);
+    $("#p1Name").html(snap.val().p1.name + " - " + snap.val().p1.score + "pts");
+    $("#p2Name").html(snap.val().p2.name + " - " + snap.val().p2.score + "pts");
 
     $("#p1score").animate({"width" : game.p1score * 10 + "%"})
     $("#p2score").animate({"width" : 100 - (game.p2score * 10)  + "%"})
@@ -317,7 +314,6 @@ $(document).ready(function() {
     } 
 
     if(!game.name){if (!snap.val().started){$("#form").fadeIn("slow")}}
-      
 
     if(snap.val().p1.picked !== "null"){
       $("#fillLeft").animate({"width" : "85%"}, 1000);
