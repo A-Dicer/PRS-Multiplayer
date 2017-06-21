@@ -227,7 +227,7 @@ $(document).ready(function() {
 
       setTimeout( function(){
 
-        $("#choiceLeft, #choiceRight").fadeOut("slow");
+        $("#choiceLeft, #choiceRight, h2").fadeOut("slow");
         
         game.database.ref("/game/p1/").update({ score:  game.p1score}); 
         game.database.ref("/game/p2/").update({ score:  game.p2score});
@@ -240,27 +240,39 @@ $(document).ready(function() {
       
       
       if (game.p1score < 1 || game.p2score < 1){ 
-        setTimeout( function(){ game.end, 7000});
+        setTimeout(game.end, 7000);
       } else {
-        setTimeout( function(){ game.start, 7000});
+        setTimeout(game.start, 7000);
       }
      
     },
 
     end: function(){
+      console.log("end");
+      var result;
 
+      
       database.ref("/game/").once("value", function(snap) {     
-        game.p1score = snap.val().p1.name;
-        game.p2score = snap.val().p2.score;
-        var result;
-        if(game.p1score < 1 || game.p2score < 1){ result = "You Both Lost"}
-        else if (game.p1score < 1 ){result = snap.val().p1.name + " Wins!"}
-        else if (game.p1score < 1 ){result = snap.val().p2.name + " Wins!"}
+        if (game.p1score === game.p2score) {result = "You Both Lose!"}
+        else if (game.p1score > game.p2score ){result = snap.val().p1.name + " Wins!"}
+        else {result = snap.val().p2.name + " Wins!"}
       });
+
+      $("h2").fadeIn("slow").text(result);
+
+      setTimeout(game.reset, 5000);
+
     },
 
     reset: function(){
-      
+       game.session = false;
+        game.name = false;
+        game.player = null;
+        game.p1score = 10;
+        game.p2score = 10;
+        $("h2").fadeOut("slow");
+        console.log("reset");
+
       game.database.ref("/game").update({
         started: false,
         playerCount: 0,
@@ -280,14 +292,7 @@ $(document).ready(function() {
         score: "10",
       })
       
-        game.session = false;
-        game.name = false;
-        game.player = null;
-        game.p1score = 10;
-        game.p2score = 10;
-
-        $("h2").fadeOut("slow");
-        console.log("reset");
+    location.reload()
     },
   }
  
