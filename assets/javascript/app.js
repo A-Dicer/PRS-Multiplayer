@@ -13,9 +13,7 @@ $(document).ready(function() {
 
  // Create a variable to reference the database.
   var database = firebase.database();
-    // console.log(database);
   var connectionsRef = database.ref("/users");
-  // console.log(connectionsRef)
   var connectedRef = database.ref(".info/connected");
   //watches for changes on users
   connectedRef.on("value", function(snap) {
@@ -35,7 +33,6 @@ $(document).ready(function() {
 
   var game = {
     name: false,
-    text: null,
     player: null,
     p1score: 10,
     p2score: 10,
@@ -44,19 +41,19 @@ $(document).ready(function() {
     session: false,
     key: null,
     win: null,
+    roundNumber: 1,
     database: firebase.database(),
 
-    start: function(){   
+    start: function(){ 
+      console.log("Round: " + game.roundNumber)
       //sets items on page 
       $("h2").fadeOut("slow");
-      $("#choiceLeft, #choiceRight").html("");
-      
+      $("#choiceLeft, #choiceRight").html("");   
       //opens "doors"
       setTimeout( function(){
         $("#fillLeft").animate({"width" : "30%"}, 1000);
         $("#fillRight").animate({"right" : "-260px"}, 1000);
       }, 500);
-
       //get ready to start
       setTimeout(function(){$("h5").fadeIn("slow").html("Get Ready!")}, 2000)
       setTimeout(game.round, 5000);
@@ -104,31 +101,31 @@ $(document).ready(function() {
         //starts the timer
         $("#CountDownTimer").TimeCircles().start();
         //after 5 seconds go get results
-        setTimeout(game.results, 5000);
-      
+        setTimeout(game.results, 5000);  
     },
 
     results: function(){
-       console.log(game.player + " :results");
+      //puts itmes on page
       $("span").fadeOut("slow");
       $("#CountDownTimer").TimeCircles().destroy();
       $("#CountDownTimer").TimeCircles().rebuild();
       $("#picksLeft, #picksRight").fadeOut("slow");
       
+      //grabs some info from the database once
       database.ref("/game/").once("value", function(snap) {
         game.p1Picked = snap.val().p1.picked;
         game.p2Picked = snap.val().p2.picked;
         game.p1score = snap.val().p1.score;
         game.p2score = snap.val().p2.score;
       });
-
+     
         var p1Picked = game.p1Picked
         var p2Picked = game.p2Picked
-        console.log("Player One " + p1Picked);
-        console.log("Player Two " + p2Picked);
 
+        //set game.win back to null every time
         game.win = null;
 
+        //check to see if player one made a choice
         if( p1Picked !== "null"){
           if( p1Picked === p2Picked){game.win = "tie"}
           else if ( p1Picked === "paper") {
@@ -143,9 +140,8 @@ $(document).ready(function() {
             if (p2Picked === "paper"){game.win = "p1" }
             else if (p2Picked === "rock"){game.win = "p2";}
           }
-          console.log("First Check " + game.win)
         } 
-
+        //if player one didn't make a choice do this
         else if (p2Picked !== "null"){
           if( p1Picked === p2Picked){game.win = "tie"}
           else if ( p2Picked === "paper") {
@@ -160,11 +156,12 @@ $(document).ready(function() {
             if (p2Picked === "paper"){game.win = "p2" }
             else if(p1Picked === "rock"){game.win = "p1";}
           }
-          console.log("Second Check" + game.win)
         }
-
+        //in no one made a choice... what a bunch of jerks
         else {console.log("NOBODY PICKED ANYTHING!")}
 
+        //time to caculate the points
+        //I'm sure this could be done better
         if (game.win === "p1"){
           game.p2score = game.p2score - 2;
         }
@@ -185,24 +182,21 @@ $(document).ready(function() {
           game.p1score = game.p1score - 3;  
         }
 
-        console.log("p1 score: " + game.p1score)
-        console.log("p2 score: " + game.p2score)
-     
-
+       //console log what they picked
+        console.log("Player One: " + game.p1score + "pts - " + p1Picked);
+        console.log("Player Two: " + game.p2score + "pts - " + p2Picked);
       game.recap();
     },
 
     recap: function(){
       var response;
       var loser;
-       console.log(game.player + " :recap");
+      //build the response 
       if (game.p1Picked === "null" && game.p2Picked === "null"){
         response = "Hey, Nobody Picked Anything!";
       }
-
       else if (game.p1Picked === "null"){response = "Player One Didn't Pick!"}
       else if (game.p2Picked === "null"){response = "Player Two Didn't Pick!"}
-
       else if (game.win !== "tie") {
         if (game.win === "p1"){
           response = game.p1Picked + " beats " + game.p2Picked;
@@ -213,7 +207,7 @@ $(document).ready(function() {
         }
       }
       else { response = "You Tied"};
-
+      //show the the results of the round
       setTimeout( function(){
       $("#choiceLeft, #choiceRight").css({"display" : "block"});
       }, 500);
@@ -225,51 +219,45 @@ $(document).ready(function() {
       }, 1500)
 
       setTimeout( function(){
-
         $("#choiceLeft, #choiceRight, h2").fadeOut("slow");
-        
+        //update firebase   
         game.database.ref("/game/p1/").update({ score:  game.p1score}); 
         game.database.ref("/game/p2/").update({ score:  game.p2score});
         game.database.ref("/game/p1/").update({ picked:  "null"}); 
-        game.database.ref("/game/p2/").update({ picked:  "null"});
-       
+        game.database.ref("/game/p2/").update({ picked:  "null"});      
       }, 5500);
-
       
-      
-      
+      //check to see if someone lost    
       if (game.p1score < 1 || game.p2score < 1){ 
-        setTimeout(game.end, 7000);
+        setTimeout(function(){
+          console.log("----------")
+          game.roundNumber++
+          game.end(), 7000});
       } else {
         setTimeout(game.start, 7000);
-      }
-     
+      }     
     },
 
     end: function(){
-      console.log("end");
       var result;
+      //build the result
       database.ref("/game/").once("value", function(snap) {     
         if (game.p1score === game.p2score) {result = "You Both Lose!"}
         else if (game.p1score > game.p2score ){result = snap.val().p1.name + " Wins!"}
         else {result = snap.val().p2.name + " Wins!"}
       });
-
+      //desplay the result
       $("h2").fadeIn("slow").text(result);
+      console.log("---------------------------");
+      console.log(result);
+      console.log("");
 
       setTimeout(game.reset, 5000);
-
     },
 
     reset: function(){
-       game.session = false;
-        game.name = false;
-        game.player = null;
-        game.p1score = 10;
-        game.p2score = 10;
-        $("h2").fadeOut("slow");
-        console.log("reset");
 
+      //reset firebase values
       game.database.ref("/game").update({
         started: false,
         playerCount: 0,
@@ -289,85 +277,103 @@ $(document).ready(function() {
         score: "10",
       })
 
-    location.reload()
+    game.name = false;
+    game.player = null;
+    game.p1score = 10;
+    game.p2score = 10;
+    game.p1Picked = null;
+    game.p2Picked = null;
+    game.session = false;
+    game.key = null;
+    game.win = null;
+    game.roundNumber = 1;
+
+    $("h2").fadeOut("slow");
+    $("#form").fadeIn("slow");
+    //reload page 
+    // location.reload()
     },
   }
- 
 
   //listens to see if play button should be shown
   database.ref("/game/").on("value", function(snap) {
     var players = snap.val().playerCount
-    console.log("number of players " + players);
 
+    //listen for name and score changes on page
     $("#p1Name").html(snap.val().p1.name + " - " + snap.val().p1.score + "pts");
     $("#p2Name").html(snap.val().p2.name + " - " + snap.val().p2.score + "pts");
 
+    //calculate the % of each player and animate it when it changes
     $("#p1score").animate({"width" : game.p1score * 10 + "%"})
     $("#p2score").animate({"width" : 100 - (game.p2score * 10)  + "%"})
 
+    //listen for player ones pick.  place image of that pick on page.
     if(snap.val().p1.picked !== "null"){
       $("#choiceLeft").html("<img src='assets/images/" + snap.val().p1.picked + ".png' id='p1Choice'>" )
     }
-
+    //listen for player twos pick.  place image of that pick on page.
     if(snap.val().p2.picked !== "null"){
     $("#choiceRight").html("<img src='assets/images/" + snap.val().p2.picked + ".png' id='p2Choice'>" )
     } 
 
+    //if the the user hasn't put a name in and the game hasn't started show form
     if(!game.name){if (!snap.val().started){$("#form").fadeIn("slow")}}
 
+    //when score changes for player one animate the change
     if(snap.val().p1.picked !== "null"){
       $("#fillLeft").animate({"width" : "85%"}, 1000);
     }
-
+    //when score changes for player two animate the change
     if(snap.val().p2.picked !== "null"){
       $("#fillRight").animate({"right" : "-130px"}, 1000);
     } 
 
+    //checks to see if the user has entered the game
     if (!game.session){
+      //checks to see if there are two players... if so starts the game.
       if (players === 2) {
         game.session = true;
+        //update firbase with game state
         game.database.ref("/game").update({started: true,})
         $("#form").fadeOut("slow")
-        setTimeout(game.start, 3000);
+        setTimeout(function(){ 
+        console.log(snap.val().p1.name + " -vs- " + snap.val().p2.name)
+        console.log("---------------------------")
+        game.start(), 3000});
       }  
     }
-
-
   })
-
 
   //button to play the game
   $("#play-game").on("click", function(event) {
     event.preventDefault();
     
-    //check to see the number of players
-    database.ref("game").once("value", function(snap) {
-    var players = snap.val().playerCount;
-    console.log(players)
-      //if there are no players you are player one
-      if (players === 0){
-        game.player = 1;
-        game.name = $("#name-input").val().trim();
-        database.ref("/game").update({playerCount: 1});
-        database.ref("/game/p1").update({name: game.name, key: game.key})
-      }
+    if($("#name-input").val().trim() !== ""){
       
-      //if there is one player you are player two
-      if (players === 1){
-        game.player = 2;
-        game.name = $("#name-input").val().trim();
-        database.ref("/game").update({playerCount: 2});
-        database.ref("/game/p2").update({name: game.name, key: game.key})
-      }
-    });
-    
+      //check to see the number of players
+      database.ref("game").once("value", function(snap) {
+      var players = snap.val().playerCount;
+        //if there are no players you are player one
+        if (players === 0){
+          game.player = 1;
+          game.name = $("#name-input").val().trim();
+          //update firebase
+          database.ref("/game").update({playerCount: 1});
+          database.ref("/game/p1").update({name: game.name, key: game.key})
+        }
+        
+        //if there is one player you are player two
+        if (players === 1){
+          game.player = 2;
+          game.name = $("#name-input").val().trim();
+          //update firebase
+          database.ref("/game/p2").update({name: game.name, key: game.key})
+          database.ref("/game").update({playerCount: 2});    
+        }
+      }) 
+    };
+    //remove form
     $("#form").fadeOut("slow");
-  })
-
-
-  $("#reset").on("click", game.reset);
-
-  
+  })  
 
 });
-
