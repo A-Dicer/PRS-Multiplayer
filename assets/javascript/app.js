@@ -275,21 +275,8 @@ $(document).ready(function() {
         score: "10",
       })
 
-    game.name = false;
-    game.player = null;
-    game.p1score = 10;
-    game.p2score = 10;
-    game.p1Picked = null;
-    game.p2Picked = null;
-    game.session = false;
-    game.key = null;
-    game.win = null;
-    game.roundNumber = 1;
-
-    $("h2").fadeOut("slow");
-    $("#form").fadeIn("slow");
     //reload page 
-    // location.reload()
+    location.reload()
     },
   }
 
